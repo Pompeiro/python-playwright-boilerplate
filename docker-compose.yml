@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  playwright-tests:
+    build: .
+    volumes:
+      - ./src:/app/src
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    env_file:
+      - .env
+    environment:
+      - DISPLAY=${DISPLAY:-0}
+      - ALLURE_URL=${ALLURE_URL:-http://192.168.0.167:5050}
+    stdin_open: true
+    tty: true
+
+  allure:
+    image: "frankescobar/allure-docker-service"
+    environment:
+      CHECK_RESULTS_EVERY_SECONDS: NONE
+      KEEP_HISTORY: "TRUE"
+      SECURITY_USER: ${SECURITY_USER:-admin}
+      SECURITY_PASS: ${SECURITY_PASS:-I<3admin}
+      SECURITY_ENABLED: ${SECURITY_ENABLED:-1}
+    ports:
+      - "5050:5050"
+    volumes:
+      - ${PWD}/src/reports:/app/allure-results
+      - ${PWD}/src/reports:/app/default-reports
+
+  allure-ui:
+    image: "frankescobar/allure-docker-service-ui"
+    environment:
+      ALLURE_DOCKER_PUBLIC_API_URL: "http://localhost:5050"
+      ALLURE_DOCKER_PUBLIC_API_URL_PREFIX: ""
+    ports:
+      - "5252:5252"
