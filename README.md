@@ -72,7 +72,7 @@ $ make test
 ~~~
 To run specific test in debug mode:
 ~~~
-$ SPEC=test_normal_user_can_navigate_with_reports_icon make test-spec
+$ SPEC=test_user_should_login_using_valid_credentials make test-spec
 ~~~
 To run tests in headed mode with slowmo 800ms:
 ~~~
